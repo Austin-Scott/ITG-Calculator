@@ -19,7 +19,7 @@
             </div>
             <div class="input-group input-group-lg mt-3">
                 <span class="input-group-text">MINI</span>
-                <input type="number" class="form-control" id="inputMINI">
+                <input type="number" class="form-control" placeholder="0" id="inputMINI">
                 <button class="btn btn-outline-success" type="button" onclick="solveForMini()">Solve</button>
             </div>
             <div class="input-group input-group-lg mt-3">
@@ -34,13 +34,16 @@
             </div>
             <div class="input-group input-group-lg mt-3">
                 <span class="input-group-text">RATE</span>
-                <input type="number" class="form-control" id="inputRATE">
+                <input type="number" class="form-control" placeholder="1.0" id="inputRATE">
                 <button class="btn btn-outline-success" type="button" onclick="solveForRateMod()">Solve</button>
             </div>
             <div class="input-group input-group-lg mt-3">
                 <span class="input-group-text">NTS</span>
                 <input type="number" class="form-control" id="inputNTS">
                 <button class="btn btn-outline-success" type="button" onclick="solveForNTS()">Solve</button>
+            </div>
+            <div class="input-group input-group-lg mt-3">
+                <button class="btn btn-outline-danger w-100" type="button" onclick="clearAll()">Clear All</button>
             </div>
         </form>
 
@@ -76,6 +79,15 @@
             document.getElementById('modalBody').innerText = body
             const modal = new bootstrap.Modal(document.getElementById('alertModal'))
             modal.show()
+        }
+
+        function clearAll() {
+            bpmInput.value = ''
+            miniInput.value = ''
+            npsInput.value = ''
+            nosInput.value = ''
+            rateInput.value = ''
+            ntsInput.value = ''
         }
 
         function isNumeric(n) {

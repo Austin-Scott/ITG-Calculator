@@ -8,11 +8,11 @@ function noteTimeOnScreenSecondsWithMini(bpm: number, mini: number): number {
 }
 
 function noteTimeOnScreenSecondsWithMiniAndRateMod(bpm: number, mini: number, rateMod: number): number {
-    return rateMod*noteTimeOnScreenSecondsWithMini(bpm, mini)
+    return noteTimeOnScreenSecondsWithMini(bpm, mini) - ((rateMod - 1.0)*noteTimeOnScreenSecondsWithMini(bpm, mini))
 }
 
 function rateMod(bpm: number, mini: number, nts: number): number {
-    return (((-4504.5*bpm)-5059.91)*nts)/((bpm-17238.1)*(mini+100))
+    return ((bpm*((2*mini) + (4504.5*nts) + 200)-((34476.1*mini)+(5059.91*nts)-3447610)))/((bpm-17238.1)*(mini+100))
 }
 
 function notesOnScreen(bpm: number, mini: number, nps: number): number {

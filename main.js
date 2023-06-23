@@ -6,10 +6,10 @@ function noteTimeOnScreenSecondsWithMini(bpm, mini) {
     return noteTimeOnScreenSeconds(bpm) + ((mini / 100.0) * noteTimeOnScreenSeconds(bpm));
 }
 function noteTimeOnScreenSecondsWithMiniAndRateMod(bpm, mini, rateMod) {
-    return rateMod * noteTimeOnScreenSecondsWithMini(bpm, mini);
+    return noteTimeOnScreenSecondsWithMini(bpm, mini) - ((rateMod - 1.0) * noteTimeOnScreenSecondsWithMini(bpm, mini));
 }
 function rateMod(bpm, mini, nts) {
-    return (((-4504.5 * bpm) - 5059.91) * nts) / ((bpm - 17238.1) * (mini + 100));
+    return ((bpm * ((2 * mini) + (4504.5 * nts) + 200) - ((34476.1 * mini) + (5059.91 * nts) - 3447610))) / ((bpm - 17238.1) * (mini + 100));
 }
 function notesOnScreen(bpm, mini, nps) {
     return nps * noteTimeOnScreenSecondsWithMini(bpm, mini);
