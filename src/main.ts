@@ -1,33 +1,53 @@
 
-function noteTimeOnScreenSeconds(bpm: number): number {
-    return ((-0.0222*bpm) + 382.6851)/(bpm + 1.1233)
+function bpmNosNpsRateMini(nos: number, nps: number, rate: number, mini: number): number {
+    return ((((17238.1*mini)+1723810)*nps*rate)-(5059.91*nos))/((((mini+100)*nps*rate)+(4504.5*nos))*rate)
 }
 
-function noteTimeOnScreenSecondsWithMini(bpm: number, mini: number): number {
-    return noteTimeOnScreenSeconds(bpm) + ((mini/100.0)*noteTimeOnScreenSeconds(bpm))
+function bpmNtsRateMini(nts: number, rate: number, mini: number): number {
+    return ((17238.1*mini)-(5059.91*nts)+1723810)/((mini*rate)+(4504.5*rate*nts)+(100*rate))
 }
 
-function noteTimeOnScreenSecondsWithMiniAndRateMod(bpm: number, mini: number, rateMod: number): number {
-    return noteTimeOnScreenSecondsWithMini(bpm, mini) - ((rateMod - 1.0)*noteTimeOnScreenSecondsWithMini(bpm, mini))
+function miniNosNpsBpmRate(nos: number, nps: number, bpm: number, rate: number): number {
+    return ((4504.5*bpm*nos*rate)+(100*bpm*nps*rate*rate)+(5059.91*nos)-(1723810*nps*rate))/((17238.1*nps*rate)-(bpm*nps*rate*rate))
 }
 
-function rateMod(bpm: number, mini: number, nts: number): number {
-    return ((bpm*((2*mini) + (4504.5*nts) + 200)-((34476.1*mini)+(5059.91*nts)-3447610)))/((bpm-17238.1)*(mini+100))
+function miniNtsBpmRate(nts: number, bpm: number, rate: number): number {
+    return ((bpm*rate*((-4504.5*nts)-100))-(5059.91*nts)+1723810)/((bpm*rate)-17238.1)
 }
 
-function notesOnScreen(bpm: number, mini: number, nps: number): number {
-    return nps * noteTimeOnScreenSecondsWithMini(bpm, mini)
+function npsNosNtsRate(nos: number, nts: number, rate: number): number {
+    return nos/(rate*nts)
 }
 
-function beatsPerMinute(nps: number, nos: number, mini: number): number {
-    return ((nps*((3826851*mini)+382685100))-(1123300*nos))/((222*mini*nps)+(1000000*nos)+(22200*nps))
+function npsNosBpmRateMini(nos: number, bpm: number, rate: number, mini: number): number {
+    return (nos*((-4504.5*bpm*rate)-5059.91))/(((mini+100)*rate*((bpm*rate)-17238.1)))
 }
 
-function mini(bpm: number, nps: number, nos: number): number {
-    return ((4504.5*bpm*nos)+(100*bpm*nps)+(5059.91*nos)-(1723810*nps))/((17238.1*nps)-(bpm*nps))
+function nosNpsNtsRate(nps: number, nts: number, rate: number): number {
+    return nps*rate*nts
 }
 
-function notesPerSecond(bpm: number, mini: number, nos: number): number {
-    return (((-4504.5*bpm)-5059.91)*nos)/((bpm-17238.1)*(mini+100))
+function nosNpsBpmRateMini(nps: number, bpm: number, rate: number, mini: number): number {
+    return nps*rate*((((-0.0222*bpm*rate)+382.6851)/(bpm*rate+1.1233))+(mini/100)*(((-0.0222*bpm*rate)+382.6851)/(bpm*rate+1.1233)))
+}
+
+function rateNosNpsNts(nos: number, nps: number, nts: number): number {
+    return nos/(nps*nts)
+}
+
+function rateNosNpsBpmMini(nos: number, nps: number, bpm: number, mini: number): number {
+    return (-0.00225225*Math.sqrt(1000000000000*bpm*bpm*nos*nos+bpm*(-7654699490400*mini-765469949040000)*nos*nps+(14644788576201*mini*mini+2928957715240200*mini+146447885762009984.0)*nps*nps)-2252.25*bpm*nos+8619.03*mini*nps+861903*nps)/(bpm*(mini+100)*nps)
+}
+
+function rateNtsBpmMini(nts: number, bpm: number, mini: number): number {
+    return (17238.1*mini - 5059.91*nts + 1723810)/(bpm*mini + 4504.5*bpm*nts + 100*bpm)
+}
+
+function ntsNosNpsRate(nos: number, nps: number, rate: number): number {
+    return nos/(nps*rate)
+}
+
+function ntsBpmRateMini(bpm: number, rate: number, mini: number): number {
+    return (((-0.0222*bpm*rate) + 382.6851)/(bpm*rate + 1.1233)) + (mini/100)*(((-0.0222*bpm*rate) + 382.6851)/(bpm*rate + 1.1233))
 }
 

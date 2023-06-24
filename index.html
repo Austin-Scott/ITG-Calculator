@@ -94,74 +94,81 @@
             return !isNaN(parseFloat(n)) && isFinite(n)
         }
 
-        function solveForBPM() {
-            if(!isNumeric(npsInput.value) || !isNumeric(nosInput.value)) {
-                displayModal('Missing Field Values', 'BPM requires values of NPS and NOS (optionally MINI)')
-                return
+        function hasValues(...values) {
+            for(const value of values) {
+                if(!isNumeric(value.value)) {
+                    return false
+                }
             }
-            if(isNumeric(miniInput.value)) {
-                bpmInput.value = beatsPerMinute(Number(npsInput.value), Number(nosInput.value), Number(miniInput.value))
+            return true
+        }
+
+        function toNum(value) {
+            return Number(value.value)
+        }
+
+        function orDefault(value, orValue) {
+            if(isNumeric(value.value)) {
+                return toNum(value)
             } else {
-                bpmInput.value = beatsPerMinute(Number(npsInput.value), Number(nosInput.value), 0.0)
+                return orValue
+            }
+        }
+
+        function solveForBPM() {
+            if(hasValues(nosInput, npsInput)) {
+                bpmInput.value = bpmNosNpsRateMini(toNum(nosInput), toNum(npsInput), orDefault(rateInput, 1.0), orDefault(miniInput, 0))
+            } else if(hasValues(ntsInput)) {
+                bpmInput.value = bpmNtsRateMini(toNum(ntsInput), orDefault(rateInput, 1.0), orDefault(miniInput, 0))
+            } else {
+                displayModal('Missing Field Values', 'BPM requires values of (NOS, NPS, RATE, MINI) or (NTS, RATE, MINI)')
             }
         }
         function solveForMini() {
-            if(!isNumeric(bpmInput.value) || !isNumeric(npsInput.value) || !isNumeric(nosInput.value)) {
-                displayModal('Missing Field Values', 'MINI requires values of BPM, NPS, and NOS')
-                return
+            if(hasValues(nosInput, npsInput, bpmInput)) {
+                miniInput.value = miniNosNpsBpmRate(toNum(nosInput), toNum(npsInput), toNum(bpmInput), orDefault(rateInput, 1.0))
+            } else if(hasValues(ntsInput, bpmInput)) {
+                miniInput.value = miniNtsBpmRate(toNum(ntsInput), toNum(bpmInput), orDefault(rateInput, 1.0))
+            } else {
+                displayModal('Missing Field Values', 'MINI requires values of (NOS, NPS, BPM, RATE) or (NTS, BPM, RATE)')
             }
-            miniInput.value = mini(Number(bpmInput.value), Number(npsInput.value), Number(nosInput.value))
         }
         function solveForNPS() {
-            if(!isNumeric(bpmInput.value) || !isNumeric(nosInput.value)) {
-                displayModal('Missing Field Values', 'NPS requires values of BPM and NOS (optionally MINI)')
-                return
-            }
-            if(isNumeric(miniInput.value)) {
-                npsInput.value = notesPerSecond(Number(bpmInput.value), Number(miniInput.value), Number(nosInput.value))
+            if(hasValues(nosInput, ntsInput)) {
+                npsInput.value = npsNosNtsRate(toNum(nosInput), toNum(ntsInput), orDefault(rateInput, 1.0))
+            } else if(hasValues(nosInput, bpmInput)) {
+                npsInput.value = npsNosBpmRateMini(toNum(nosInput), toNum(bpmInput), orDefault(rateInput, 1.0), orDefault(miniInput, 0))
             } else {
-                npsInput.value = notesPerSecond(Number(bpmInput.value), 0.0, Number(nosInput.value))
+                displayModal('Missing Field Values', 'NPS requires values of (NOS, NTS, RATE) or (NOS, BPM, RATE, MINI)')
             }
         }
         function solveForNOS() {
-            if(!isNumeric(bpmInput.value) || !isNumeric(npsInput.value)) {
-                displayModal('Missing Field Values', 'NOS requires values of BPM and NPS (optionally MINI)')
-                return
-            }
-            if(isNumeric(miniInput.value)) {
-                nosInput.value = notesOnScreen(Number(bpmInput.value), Number(miniInput.value), Number(npsInput.value))
+            if(hasValues(npsInput, ntsInput)) {
+                nosInput.value = nosNpsNtsRate(toNum(npsInput), toNum(ntsInput), orDefault(rateInput, 1.0))
+            } else if(hasValues(npsInput, bpmInput)) {
+                nosInput.value = nosNpsBpmRateMini(toNum(npsInput), toNum(bpmInput), orDefault(rateInput, 1.0), orDefault(miniInput, 0))
             } else {
-                nosInput.value = notesOnScreen(Number(bpmInput.value), 0.0, Number(npsInput.value))
+                displayModal('Missing Field Values', 'NOS requires values of (NPS, NTS, RATE) or (NPS, BPM, RATE, MINI)')
             }
         }
         function solveForRateMod() {
-            if(!isNumeric(bpmInput.value) || !isNumeric(miniInput.value) || !isNumeric(ntsInput.value)) {
-                displayModal('Missing Field Values', 'RATE requires values of BPM and NTS (optionally MINI)')
-                return
-            }
-            if(isNumeric(miniInput.value)) {
-                rateInput.value = rateMod(Number(bpmInput.value), Number(miniInput.value), Number(ntsInput.value))
+            if(hasValues(nosInput, npsInput, ntsInput)) {
+                rateInput.value = rateNosNpsNts(toNum(nosInput), toNum(npsInput), toNum(ntsInput))
+            } else if(hasValues(nosInput, npsInput, bpmInput)) {
+                rateInput.value = rateNosNpsBpmMini(toNum(nosInput), toNum(npsInput), toNum(bpmInput), orDefault(miniInput, 0))
+            } else if(hasValues(ntsInput, bpmInput)) {
+                rateInput.value = rateNtsBpmMini(toNum(ntsInput), toNum(bpmInput), orDefault(miniInput, 0))
             } else {
-                rateInput.value = rateMod(Number(bpmInput.value), 0.0, Number(ntsInput.value))
+                displayModal('Missing Field Values', 'RATE requires values of (NOS, NPS, NTS) or (NOS, NPS, BPM, MINI) or (NTS, BPM, MINI)')
             }
         }
         function solveForNTS() {
-            if(!isNumeric(bpmInput.value)) {
-                displayModal('Missing Field Values', 'NTS requires value of BPM (optionally MINI and RATE)')
-                return
-            }
-            if(isNumeric(rateInput.value)) {
-                if(isNumeric(miniInput.value)) {
-                    ntsInput.value = noteTimeOnScreenSecondsWithMiniAndRateMod(Number(bpmInput.value), Number(miniInput.value), Number(rateInput.value))
-                } else {
-                    ntsInput.value = noteTimeOnScreenSecondsWithMiniAndRateMod(Number(bpmInput.value), 0.0, Number(rateInput.value))
-                }
+            if(hasValues(nosInput, npsInput)) {
+                ntsInput.value = ntsNosNpsRate(toNum(nosInput), toNum(npsInput), orDefault(rateInput, 1.0))
+            } else if(hasValues(bpmInput)) {
+                ntsInput.value = ntsBpmRateMini(toNum(bpmInput), orDefault(rateInput, 1.0), orDefault(miniInput, 0))
             } else {
-                if(isNumeric(miniInput.value)) {
-                    ntsInput.value = noteTimeOnScreenSecondsWithMiniAndRateMod(Number(bpmInput.value), Number(miniInput.value), 1.0)
-                } else {
-                    ntsInput.value = noteTimeOnScreenSecondsWithMiniAndRateMod(Number(bpmInput.value), 0.0, 1.0)
-                }
+                displayModal('Missing Field Values', 'NTS requires values of (NOS, NPS, RATE) or (BPM, RATE, MINI)')
             }
         }
     </script>
